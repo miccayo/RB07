@@ -1,5 +1,7 @@
 <?php
 
+	// Also an incomplete feature that would include version hashing (not very important)
+
 	header("Content-Type: application/json");
 
 	$Versions = json_encode(
