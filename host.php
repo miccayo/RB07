@@ -21,8 +21,10 @@
         Generated to host on port <?php echo $HostPort; ?>.
 --]]
 
-local function SetMessage(m) game:SetMessage(m) end
 local function FailMessage(m) game:SetMessage(m) wait(math.huge) end
+local function SetMessage(m) game:SetMessage(m) end
+
+local LogChatToOutput = false
 
 if (type(<?php echo $HostPort; ?>) ~= "number") then FailMessage("An invalid port was provided.") end
 
@@ -42,34 +44,32 @@ end
 
 game:GetService("Players").PlayerAdded:connect(function(p)
 
-	-- CheckDuplicates(p)
-
-	local CharApp = game:HttpGet("http://pork.co.nf/charapp/?uname=" .. p.Name, true)
-
-	-- print(string.format("CharacterAppearance for %s: %s", p.Name, CharApp))
-
-	p.CharacterAppearance = CharApp
-
 	print(string.format("%s joined the game.", p.Name))
 
-	p.Chatted:connect(function(msg)
-		local ChatMessage = string.format("[%s]: %s", p.Name, msg)
-		print(ChatMessage)
+	local CharApp = game:HttpGet("http://pork.co.nf/charapp/?uname=" .. p.Name, true)
+	-- print(string.format("CharacterAppearance for %s: %s", p.Name, CharApp))
+	p.CharacterAppearance = CharApp
 
-		if (msg == "/reset") then
-			if (workspace[p.Name]) then
-				workspace[p.Name].Humanoid.Health = 0
+	if (LogChatToOutput) then
+		p.Chatted:connect(function(msg)
+			local ChatMessage = string.format("[%s]: %s", p.Name, msg)
+			print(ChatMessage)
+
+			if (msg == "/reset") then
+				if (workspace[p.Name]) then
+					workspace[p.Name].Humanoid.Health = 0
+				end
 			end
+		end)
+	end
+
+	p.Changed:connect(function(propertyName)
+		if (propertyName == "Character") then
+			BindRespawn(p)
 		end
 	end)
 
-    p.Changed:connect(function(propertyName)
-            if (propertyName == "Character") then
-                    BindRespawn(p)
-            end
-    end)
-
-    p:LoadCharacter()
+	p:LoadCharacter()
         
 end)
 
