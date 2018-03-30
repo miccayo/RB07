@@ -1,5 +1,5 @@
 # RB07
-Website and launcher source for RB07 - https://rb07.herokuapp.com/ and http://pork.co.nf (redirect)
+Website and launcher source for RB07
 
 Don't ignore the license, please.
 
